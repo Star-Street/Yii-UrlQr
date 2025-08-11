@@ -1,0 +1,9 @@
+# phpstorm project files
+.idea
+.git
+
+# logs dir
+/logs/*
+
+# env params
+.env
