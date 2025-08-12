@@ -64,6 +64,12 @@ $this->title = 'Yii-Reduce QR Code';
                 </div>
 
             </div>
+
+            <div class="col-lg-6 col-md-8 text-center">
+
+                <p class="text-secondary">Click on the short link field to follow the link (a new tab will open).</p>
+
+            </div>
         </div>
     </div>
 </div>
