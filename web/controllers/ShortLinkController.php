@@ -33,22 +33,21 @@ class ShortLinkController extends Controller
 
         try {
             $originalUrl = Yii::$app->request->post('original_url');
-
-            if (empty($originalUrl)) {
-                $result['error'] = 'URL is required';
-                return $result;
-            }
+            $originalUrl = trim($originalUrl);
 
             // validate URL
-            $originalUrl = $this->isValidUrlFormat($originalUrl);
+            if (!$this->isValidUrlFormat($originalUrl)) {
+                $result['error'] = 'URL is not valid...';
+                return $result;
+            }
 
             // check accessible URL
             if (!$this->isUrlAccessible($originalUrl)) {
-                $result['error'] = 'URL is not accessible or return error...';
+                $result['error'] = 'URL is not accessible...';
                 return $result;
             }
 
-            // search existing url in DB
+            // search existing url
             if ($existing = ShortLink::findOne(['original_url' => $originalUrl])) {
                 $result['success'] = true;
                 $result['shortUrl'] = $this->getShortUrl($existing->short_code);
@@ -167,48 +166,46 @@ class ShortLinkController extends Controller
         return Yii::$app->request->hostInfo . '/' . $code;
     }
 
-    protected function isValidUrlFormat($url): string
+    /**
+     * @throws BadRequestHttpException
+     */
+    protected function isValidUrlFormat($url): bool
     {
-        $url = trim($url);
-
         if (empty($url)) {
-            throw new BadRequestHttpException('URL cannot be empty');
+            throw new BadRequestHttpException('URL cannot be empty...');
         }
 
         $parts = parse_url($url);
 
         if ($parts === false) {
-            throw new BadRequestHttpException('Wrong structure URL');
+            throw new BadRequestHttpException('Wrong structure URL...');
         }
 
         if (empty($parts['scheme']) || empty($parts['host'])) {
-            throw new BadRequestHttpException('URL must contain structure (http/https) and domain');
+            throw new BadRequestHttpException('URL must contain structure (http/https) and domain...');
         }
 
         if (!in_array(strtolower($parts['scheme']), ['http', 'https'])) {
-            throw new BadRequestHttpException('Must accept only HTTP and HTTPS protocols');
+            throw new BadRequestHttpException('Must accept only HTTP and HTTPS protocols...');
         }
 
         if (!filter_var($parts['host'], FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME)) {
-            throw new BadRequestHttpException('Wrong domain name');
+            throw new BadRequestHttpException('Wrong domain name...');
         }
 
         if (!checkdnsrr($parts['host'], 'A') && !checkdnsrr($parts['host'], 'AAAA')) {
-            throw new BadRequestHttpException('Domain does not exist or has no DNS records');
+            throw new BadRequestHttpException('Domain does not exist or has no DNS records...');
         }
 
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            throw new BadRequestHttpException('Wrong URL');
+            throw new BadRequestHttpException('Wrong URL...');
         }
 
         if (preg_match('/[\s<>]/', $url)) {
-            throw new BadRequestHttpException('URL contains invalid characters');
+            throw new BadRequestHttpException('URL contains invalid characters...');
         }
 
-        // remove duplicate slashes
-        $url = preg_replace('/([^:])(\/{2,})/', '$1/', $url);
-
-        return $url;
+        return true;
     }
 
     protected function isUrlAccessible(string $url): bool
