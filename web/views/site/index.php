@@ -2,52 +2,68 @@
 
 /** @var yii\web\View $this */
 
-$this->title = 'My Yii Application';
+$this->title = 'Yii-Reduce QR Code';
 ?>
 <div class="site-index">
 
     <div class="jumbotron text-center bg-transparent mt-5 mb-5">
-        <h1 class="display-4">Congratulations!</h1>
+        <h1 class="display-4">Yii-Reduce QR Code</h1>
 
-        <p class="lead">You have successfully created your Yii-powered application.</p>
-
-        <p><a class="btn btn-lg btn-success" href="https://www.yiiframework.com">Get started with Yii</a></p>
+        <p class="lead">Simple project on Yii 2 - link shortener + QR generation images.</p>
     </div>
 
     <div class="body-content">
 
-        <div class="row">
-            <div class="col-lg-4 mb-3">
-                <h2>Heading</h2>
+        <!-- Typing form -->
+        <div class="row justify-content-center mb-5">
+            <form id="urlForm" class="col-lg-8 col-md-10">
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
+                <div class="row g-2">
 
-                <p><a class="btn btn-outline-secondary" href="https://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
-            </div>
-            <div class="col-lg-4 mb-3">
-                <h2>Heading</h2>
+                    <!-- Input data -->
+                    <div class="col-md-8 col-12">
+                        <div class="form-floating">
+                            <input id="urlInput" type="url" class="form-control"
+                                   placeholder="https://example.com" required>
+                            <label for="urlInput">Enter your URL</label>
+                        </div>
+                    </div>
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
+                    <!-- Buttons -->
+                    <div class="col-md-4 col-12 d-flex">
+                        <button id="submitBtn" class="btn btn-primary w-100 py-3" type="submit">
+                            <span id="spinner" class="spinner-border spinner-border-sm d-none"></span>
+                            <span id="btnText">OK</span>
+                        </button>
+                    </div>
 
-                <p><a class="btn btn-outline-secondary" href="https://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
+                    <!-- Messages error -->
+                    <div id="errorAlert" class="alert alert-danger d-none"></div>
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
+                </div>
 
-                <p><a class="btn btn-outline-secondary" href="https://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
-            </div>
+            </form>
         </div>
 
+        <!-- Results -->
+        <div id="resultContainer" class="row justify-content-center d-none">
+            <div class="col-lg-6 col-md-8 text-center">
+
+                <!-- QR-code -->
+                <div id="qrCodeContainer" class="mb-4">
+                    <img id="qrCodeImage" src="" class="img-fluid border p-2"
+                         style="max-width: 350px;" alt="QR Code">
+                </div>
+
+                <!-- Short link -->
+                <div class="input-group mb-3">
+                    <input id="shortUrl" type="text" class="form-control" readonly>
+                    <button id="copyBtn" class="btn btn-outline-secondary" type="button">
+                        <span>Copy URL</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
     </div>
 </div>
