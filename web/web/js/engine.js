@@ -86,4 +86,14 @@ $(document).ready(function () {
             btn.text('Copy URL');
         }, 2000);
     });
+
+    $('#shortUrl').on('click', function() {
+        var url = $(this).val().trim();
+
+        $(this).select();
+
+        if (url && isValidUrl(url)) {
+            window.open(url, '_blank');
+        }
+    });
 });
