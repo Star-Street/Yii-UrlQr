@@ -39,7 +39,14 @@ class ShortLinkController extends Controller
                 return $result;
             }
 
+            // validate URL
             $originalUrl = $this->isValidUrlFormat($originalUrl);
+
+            // check accessible URL
+            if (!$this->isUrlAccessible($originalUrl)) {
+                $result['error'] = 'URL is not accessible or return error...';
+                return $result;
+            }
 
             // search existing url in DB
             if ($existing = ShortLink::findOne(['original_url' => $originalUrl])) {
@@ -202,5 +209,25 @@ class ShortLinkController extends Controller
         $url = preg_replace('/([^:])(\/{2,})/', '$1/', $url);
 
         return $url;
+    }
+
+    protected function isUrlAccessible(string $url): bool
+    {
+        $ch = curl_init($url);
+
+        curl_setopt_array($ch, [
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_NOBODY => true,
+            CURLOPT_TIMEOUT => 5,
+            CURLOPT_CONNECTTIMEOUT => 3,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        ]);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        return $httpCode >= 200 && $httpCode < 400;
     }
 }

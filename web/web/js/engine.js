@@ -69,6 +69,7 @@ $(document).ready(function () {
 
         const $errorAlert = $('#errorAlert');
         $errorAlert.text(message).removeClass('d-none');
+        $('#resultContainer').addClass('d-none');
 
         showError.timeout = setTimeout(function() {
             $errorAlert.addClass('d-none');
