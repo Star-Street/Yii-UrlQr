@@ -2,6 +2,9 @@
 <br>
 
 Simple project on Yii2 - link shortener + QR generation images.
+<br><br>
+
+![Yii2 Reduce present](images/reduce-main.png)
 
 
 Structure
